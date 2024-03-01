@@ -1,18 +1,14 @@
-import styled from "styled-components";
 import GlobalStyles from "./styles/GlobalStyles";
-
-const H1 = styled.h1`
-  color: red;
-  font-size: 4rem;
-  background-color: blue;
-`;
+import Heading from "./ui/Heading";
 
 function App() {
   return (
     <>
       <GlobalStyles />
       <div>
-        <H1>Hello</H1>
+        <Heading as="h1">Hello</Heading>
+        <Heading as="h2">Hello</Heading>
+        <Heading as="h3">Hello</Heading>
       </div>
     </>
   );
