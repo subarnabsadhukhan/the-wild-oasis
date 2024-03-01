@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import GlobalStyles from "./styles/GlobalStyles";
 
 const H1 = styled.h1`
   color: red;
@@ -8,9 +9,12 @@ const H1 = styled.h1`
 
 function App() {
   return (
-    <div>
-      <H1>Hello</H1>
-    </div>
+    <>
+      <GlobalStyles />
+      <div>
+        <H1>Hello</H1>
+      </div>
+    </>
   );
 }
 
