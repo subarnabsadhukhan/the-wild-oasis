@@ -47,7 +47,14 @@ const Error = styled.span`
 `;
 
 function CreateCabinForm() {
-  const { register, handleSubmit, reset } = useForm();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    getValues,
+    formState: { errors },
+  } = useForm();
+
   const queryClient = useQueryClient();
   const { mutate, status } = useMutation({
     mutationFn: createCabin,
@@ -62,46 +69,89 @@ function CreateCabinForm() {
   function onSubmit(data) {
     mutate(data);
   }
+
+  function onError(errors) {
+    console.log(errors);
+  }
   return (
-    <Form onSubmit={handleSubmit(onSubmit)}>
+    <Form onSubmit={handleSubmit(onSubmit, onError)}>
       <FormRow>
         <Label htmlFor="name">Cabin name</Label>
-        <Input type="text" id="name" {...register("name")} />
+        <Input
+          disabled={isCreating}
+          type="text"
+          id="name"
+          {...register("name", { required: "This field is required" })}
+        />
+        {errors.name && <Error>{errors.name.message}</Error>}
       </FormRow>
 
       <FormRow>
         <Label htmlFor="maxCapacity">Maximum capacity</Label>
-        <Input type="number" id="maxCapacity" {...register("maxCapacity")} />
+        <Input
+          disabled={isCreating}
+          type="number"
+          id="maxCapacity"
+          {...register("maxCapacity", {
+            required: "This field is required",
+            min: { value: 2, message: "Capacity should be at least 2" },
+          })}
+        />
+        {errors.maxCapacity && <Error>{errors.maxCapacity.message}</Error>}
       </FormRow>
 
       <FormRow>
         <Label htmlFor="regularPrice">Regular price</Label>
-        <Input type="number" id="regularPrice" {...register("regularPrice")} />
+        <Input
+          disabled={isCreating}
+          type="number"
+          id="regularPrice"
+          {...register("regularPrice", {
+            required: "This field is required",
+            min: { value: 100, message: "Regular price must be at least 100" },
+          })}
+        />
+        {errors.regularPrice && <Error>{errors.regularPrice.message}</Error>}
       </FormRow>
 
       <FormRow>
         <Label htmlFor="discount">Discount</Label>
         <Input
+          disabled={isCreating}
           type="number"
           id="discount"
           defaultValue={0}
-          {...register("discount")}
+          {...register("discount", {
+            required: "This field is required",
+            validate: (value) =>
+              +value <= +getValues().regularPrice * 0.5 ||
+              `Discount can't be more than 50% of Regular price`,
+            min: { value: 0, message: "Discount can't be negative" },
+          })}
         />
+        {errors.discount && <Error>{errors.discount.message}</Error>}
       </FormRow>
 
       <FormRow>
         <Label htmlFor="description">Description for website</Label>
         <Textarea
+          disabled={isCreating}
           type="number"
           id="description"
           defaultValue=""
-          {...register("description")}
+          {...register("description", { required: "This field is required" })}
         />
+        {errors.description && <Error>{errors.description.message}</Error>}
       </FormRow>
 
       <FormRow>
         <Label htmlFor="image">Cabin photo</Label>
-        <FileInput id="image" accept="image/*" {...register("image")} />
+        <FileInput
+          disabled={isCreating}
+          id="image"
+          accept="image/*"
+          {...register("image")}
+        />
       </FormRow>
 
       <FormRow>

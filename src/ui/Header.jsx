@@ -8,7 +8,7 @@ const StyledHeader = styled.header`
 function Header() {
   return (
     <StyledHeader>
-      <h1>The WildOasis</h1>
+      <h1>The Wild Oasis</h1>
     </StyledHeader>
   );
 }
