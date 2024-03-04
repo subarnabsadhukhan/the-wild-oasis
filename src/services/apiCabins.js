@@ -59,3 +59,59 @@ export async function createCabin(newCabin) {
   }
   return data;
 }
+export async function editCabin(newCabin) {
+  const { id, image, ...cabinData } = newCabin;
+  const isOldCabinPhoto =
+    typeof image === "string" && image.startsWith(supabaseUrl);
+
+  const imageName = isOldCabinPhoto
+    ? "NO-NEED"
+    : `${Math.random()}-${image[0].name}`.replaceAll("/", "");
+
+  const imagePath = !isOldCabinPhoto
+    ? `${supabaseUrl}/storage/v1/object/public/cabin-images/${imageName}`
+    : image;
+
+  // 1. Update Cabin
+
+  const { data, error } = await supabase
+    .from("cabins")
+    .update(cabinData)
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) throw new Error("Cabin could not be Updated");
+
+  // 2. Upload Image
+  if (!isOldCabinPhoto) {
+    const { error: storageError } = await supabase.storage
+      .from("cabin-images")
+      .upload(imageName, image[0], {
+        cacheControl: "3600",
+        upsert: false,
+      });
+    // 3. Change the image path in the database
+
+    if (!storageError) {
+      const { error: photoUploadError } = await supabase
+        .from("cabins")
+        .update({ image: imagePath })
+        .eq("id", id)
+        .select()
+        .single();
+
+      if (photoUploadError)
+        throw new Error(
+          "Cabin Data was Updated but Cabin Photo Couldn't be changed"
+        );
+    }
+
+    if (storageError)
+      throw new Error(
+        "Cabin Data was Updated but Cabin Photo Couldn't be changed"
+      );
+  }
+
+  return data; // without Image Path
+}
