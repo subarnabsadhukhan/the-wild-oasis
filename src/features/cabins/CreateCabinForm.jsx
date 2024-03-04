@@ -6,9 +6,7 @@ import Button from "../../ui/Button";
 import FileInput from "../../ui/FileInput";
 import Textarea from "../../ui/Textarea";
 import { useForm } from "react-hook-form";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createCabin } from "../../services/apiCabins";
-import toast from "react-hot-toast";
+import useCreateCabin from "./useCreateCabin";
 
 const FormRow = styled.div`
   display: grid;
@@ -55,19 +53,19 @@ function CreateCabinForm() {
     formState: { errors },
   } = useForm();
 
-  const queryClient = useQueryClient();
-  const { mutate, status } = useMutation({
-    mutationFn: createCabin,
-    onSuccess: () => {
-      toast.success("Cabin successfully created");
-      queryClient.invalidateQueries({ queryKey: ["cabins"] });
-      reset();
-    },
-    onError: (error) => toast.error(error.message),
-  });
-  const isCreating = status === "pending";
+  const [createCabinMutate, createCabinStatus] = useCreateCabin();
+
+  const isCreating = createCabinStatus === "pending";
   function onSubmit(data) {
-    mutate({ ...data, image: data.image[0] });
+    createCabinMutate(
+      { ...data, image: data.image[0] },
+      {
+        onSuccess: (createdCabin) => {
+          console.log(createdCabin);
+          reset();
+        },
+      }
+    );
   }
 
   function onError(errors) {
