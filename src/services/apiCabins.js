@@ -115,3 +115,14 @@ export async function editCabin(newCabin) {
 
   return data; // without Image Path
 }
+
+export async function duplicateCabin(cabin) {
+  const { data, error } = await supabase
+    .from("cabins")
+    .insert([cabin])
+    .select()
+    .single();
+  if (error) throw new Error("Cabin could not be duplicated");
+
+  return data;
+}

@@ -5,6 +5,9 @@ import useDeleteCabin from "./useDeleteCabin";
 import { formatCurrency } from "../../utils/helpers";
 import EditCabinForm from "./EditCabinForm";
 
+import { HiPencil, HiSquare2Stack, HiTrash } from "react-icons/hi2";
+import useDuplicateCabin from "./useDuplicateCabin";
+
 const TableRow = styled.div`
   display: grid;
   grid-template-columns: 0.6fr 1.8fr 2.2fr 1fr 1fr 1fr;
@@ -53,12 +56,26 @@ function CabinRow({ cabin }) {
     regularPrice,
     discount,
     image,
+    description,
   } = cabin;
 
   const [deleteCabinMutate, deleteStatus] = useDeleteCabin();
+  const [duplicateCabinMutate, duplicateCabinStatus] = useDuplicateCabin();
 
-  const isDeleting = deleteStatus === "pending" || deleteStatus === "success";
-
+  const isProcessing =
+    deleteStatus === "pending" ||
+    deleteStatus === "success" ||
+    duplicateCabinStatus === "pending";
+  function handleDuplicate() {
+    duplicateCabinMutate({
+      name: `Copy of ${name}`,
+      maxCapacity,
+      regularPrice,
+      discount,
+      image,
+      description,
+    });
+  }
   return (
     <>
       <TableRow role="row">
@@ -72,12 +89,17 @@ function CabinRow({ cabin }) {
           <span>&mdash;</span>
         )}
         <div>
-          <button onClick={() => setShowForm(!showForm)}>Edit</button>
+          <button onClick={handleDuplicate} disabled={isProcessing}>
+            <HiSquare2Stack />
+          </button>
+          <button onClick={() => setShowForm(!showForm)}>
+            <HiPencil />
+          </button>
           <button
-            disabled={isDeleting}
+            disabled={isProcessing}
             onClick={() => deleteCabinMutate(cabinId)}
           >
-            Delete
+            <HiTrash />
           </button>
         </div>
       </TableRow>
