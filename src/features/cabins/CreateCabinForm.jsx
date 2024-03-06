@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import useCreateCabin from "./useCreateCabin";
 import FormRow, { Error, Label } from "../../ui/FormRow";
 
-function CreateCabinForm() {
+function CreateCabinForm({ onCloseModal }) {
   const {
     register,
     handleSubmit,
@@ -26,6 +26,7 @@ function CreateCabinForm() {
         onSuccess: (createdCabin) => {
           console.log(createdCabin);
           reset();
+          onCloseModal?.();
         },
       }
     );
@@ -35,7 +36,10 @@ function CreateCabinForm() {
     console.log(errors);
   }
   return (
-    <Form onSubmit={handleSubmit(onSubmit, onError)}>
+    <Form
+      type={onCloseModal ? "modal" : "regular"}
+      onSubmit={handleSubmit(onSubmit, onError)}
+    >
       <FormRow>
         <Label htmlFor="name">Cabin name</Label>
         <Input
@@ -119,7 +123,12 @@ function CreateCabinForm() {
 
       <FormRow>
         {/* type is an HTML attribute! */}
-        <Button disabled={isCreating} $variation="secondary" type="reset">
+        <Button
+          disabled={isCreating}
+          $variation="secondary"
+          type="reset"
+          onClick={() => onCloseModal?.()}
+        >
           Cancel
         </Button>
         <Button disabled={isCreating}>Add cabin</Button>
