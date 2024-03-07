@@ -9,6 +9,7 @@ import useDuplicateCabin from "./useDuplicateCabin";
 import Modal from "../../ui/Modal";
 import ConfirmDelete from "../../ui/ConfirmDelete";
 import Table from "../../ui/Table";
+import Menus from "../../ui/Menus";
 
 const Img = styled.img`
   display: block;
@@ -77,31 +78,34 @@ function CabinRow({ cabin }) {
         <span>&mdash;</span>
       )}
       <div>
-        <button onClick={handleDuplicate} disabled={isProcessing}>
-          <HiSquare2Stack />
-        </button>
-
         <Modal>
-          <Modal.Open opens="edit-cabin-form">
-            <button>
-              <HiPencil />
-            </button>
-          </Modal.Open>
-          <Modal.Window name="edit-cabin-form">
-            <EditCabinForm cabinToEdit={cabin} />
-          </Modal.Window>
-          <Modal.Open opens="delete-cabin-form">
-            <button>
-              <HiTrash />
-            </button>
-          </Modal.Open>
-          <Modal.Window name="delete-cabin-form">
-            <ConfirmDelete
-              resourceName={`Cabin- ${name}`}
-              onConfirm={() => deleteCabinMutate(cabinId)}
-              disabled={isProcessing}
-            />
-          </Modal.Window>
+          <Menus.Menu>
+            <Menus.Toggle disabled={isProcessing} id={cabinId} />
+
+            <Menus.List id={cabinId}>
+              <Menus.Button onClick={handleDuplicate} icon={<HiSquare2Stack />}>
+                Duplicate
+              </Menus.Button>
+
+              <Modal.Open opens="edit-cabin-form">
+                <Menus.Button icon={<HiPencil />}>Edit</Menus.Button>
+              </Modal.Open>
+
+              <Modal.Open opens="delete-cabin-form">
+                <Menus.Button icon={<HiTrash />}>Delete</Menus.Button>
+              </Modal.Open>
+            </Menus.List>
+            <Modal.Window name="edit-cabin-form">
+              <EditCabinForm cabinToEdit={cabin} />
+            </Modal.Window>
+            <Modal.Window name="delete-cabin-form">
+              <ConfirmDelete
+                resourceName={`Cabin- ${name}`}
+                onConfirm={() => deleteCabinMutate(cabinId)}
+                disabled={isProcessing}
+              />
+            </Modal.Window>
+          </Menus.Menu>
         </Modal>
       </div>
     </Table.Row>
