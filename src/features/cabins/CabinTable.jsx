@@ -17,11 +17,10 @@ function CabinTable() {
         <div>Discount</div>
         <div></div>
       </Table.Header>
-      <Table.Body>
-        {cabins.map((cabin) => (
-          <CabinRow key={cabin.id} cabin={cabin} />
-        ))}
-      </Table.Body>
+      <Table.Body
+        data={cabins}
+        render={(cabin) => <CabinRow key={cabin.id} cabin={cabin} />}
+      />
     </Table>
   );
 }
