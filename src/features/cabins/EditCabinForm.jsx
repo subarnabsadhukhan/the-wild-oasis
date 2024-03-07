@@ -44,7 +44,7 @@ const Error = styled.span`
   color: var(--color-red-700);
 `;
 
-function EditCabinForm({ cabinToEdit }) {
+function EditCabinForm({ cabinToEdit, onCloseModal }) {
   const { id, ...editValues } = cabinToEdit;
 
   const {
@@ -66,6 +66,7 @@ function EditCabinForm({ cabinToEdit }) {
       {
         onSuccess: () => {
           reset();
+          onCloseModal?.();
         },
       }
     );
@@ -75,7 +76,10 @@ function EditCabinForm({ cabinToEdit }) {
     console.log(errors);
   }
   return (
-    <Form onSubmit={handleSubmit(onSubmit, onError)}>
+    <Form
+      type={onCloseModal ? "modal" : "regular"}
+      onSubmit={handleSubmit(onSubmit, onError)}
+    >
       <FormRow>
         <Label htmlFor="name">Cabin name</Label>
         <Input
@@ -159,7 +163,12 @@ function EditCabinForm({ cabinToEdit }) {
 
       <FormRow>
         {/* type is an HTML attribute! */}
-        <Button disabled={isCreating} $variation="secondary" type="reset">
+        <Button
+          disabled={isCreating}
+          $variation="secondary"
+          onClick={() => onCloseModal?.()}
+          type="reset"
+        >
           Cancel
         </Button>
         <Button disabled={isCreating}>Edit cabin</Button>
