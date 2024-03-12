@@ -23,6 +23,25 @@ function CabinTable() {
     filteredCabins = cabins.filter((cabin) => cabin.discount === 0);
   }
 
+  const sortBy = searchParams.get("sortBy") || "name-asc";
+  if (sortBy) {
+    filteredCabins = filteredCabins.sort((a, b) => {
+      if (sortBy === "name-asc") {
+        return a.name.localeCompare(b.name);
+      } else if (sortBy === "name-desc") {
+        return b.name.localeCompare(a.name);
+      } else if (sortBy === "regularPrice-asc") {
+        return a.regularPrice - b.regularPrice;
+      } else if (sortBy === "regularPrice-desc") {
+        return b.regularPrice - a.regularPrice;
+      } else if (sortBy === "maxCapacity-asc") {
+        return a.maxCapacity - b.maxCapacity;
+      } else if (sortBy === "maxCapacity-desc") {
+        return b.maxCapacity - a.maxCapacity;
+      }
+    });
+  }
+
   return (
     <Menus>
       <Table columns="0.6fr 1.8fr 2.2fr 1fr 1fr 1fr">
