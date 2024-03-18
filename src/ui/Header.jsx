@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import LogOut from "../features/authentication/LogOut";
 
 const StyledHeader = styled.header`
   background-color: var(--color-grey-0);
@@ -9,6 +10,7 @@ function Header() {
   return (
     <StyledHeader>
       <h1>The Wild Oasis</h1>
+      <LogOut />
     </StyledHeader>
   );
 }
