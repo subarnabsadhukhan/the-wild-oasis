@@ -15,6 +15,7 @@ import { Toaster } from "react-hot-toast";
 import Booking from "./pages/Booking";
 import CheckIn from "./pages/CheckIn";
 import ProtectedRoute from "./ui/ProtectedRoute";
+import PublicRoute from "./ui/PublicRoute";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -49,7 +50,14 @@ function App() {
             <Route path="settings" element={<Settings />} />
             <Route path="account" element={<Account />} />
           </Route>
-          <Route path="login" element={<Login />} />
+          <Route
+            path="login"
+            element={
+              <PublicRoute>
+                <Login />
+              </PublicRoute>
+            }
+          />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </BrowserRouter>
