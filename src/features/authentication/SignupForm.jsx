@@ -3,6 +3,7 @@ import Button from "../../ui/Button";
 import Form from "../../ui/Form";
 import FormRow, { Error, Label } from "../../ui/FormRow";
 import Input from "../../ui/Input";
+import useSignUp from "./useSignUp";
 
 // Email regex: /\S+@\S+\.\S+/
 
@@ -15,9 +16,17 @@ function SignupForm() {
     formState: { errors },
   } = useForm();
 
-  function onSubmit(data) {
-    console.log(data);
-    reset();
+  const { signUpMutate, signUpStatus } = useSignUp();
+
+  const isSubmitting = signUpStatus === "pending";
+
+  function onSubmit({ fullName, email, password }) {
+    signUpMutate(
+      { fullName, email, password },
+      {
+        onSuccess: () => reset(),
+      }
+    );
   }
 
   function onError() {}
@@ -27,6 +36,7 @@ function SignupForm() {
       <FormRow>
         <Label htmlFor="fullName">Full name</Label>
         <Input
+          disabled={isSubmitting}
           type="text"
           id="fullName"
           {...register("fullName", { required: "This field is required" })}
@@ -37,6 +47,7 @@ function SignupForm() {
       <FormRow>
         <Label htmlFor="email">Email address</Label>
         <Input
+          disabled={isSubmitting}
           type="email"
           id="email"
           {...register("email", {
@@ -53,6 +64,7 @@ function SignupForm() {
       <FormRow>
         <Label htmlFor="password">Password</Label>
         <Input
+          disabled={isSubmitting}
           type="password"
           id="password"
           {...register("password", {
@@ -69,6 +81,7 @@ function SignupForm() {
       <FormRow>
         <Label htmlFor="passwordConfirm">Repeat password</Label>
         <Input
+          disabled={isSubmitting}
           type="password"
           id="passwordConfirm"
           {...register("passwordConfirm", {
@@ -84,10 +97,10 @@ function SignupForm() {
 
       <FormRow>
         {/* type is an HTML attribute! */}
-        <Button $variation="secondary" type="reset">
+        <Button disabled={isSubmitting} $variation="secondary" type="reset">
           Cancel
         </Button>
-        <Button>Create new user</Button>
+        <Button disabled={isSubmitting}>Create new user</Button>
       </FormRow>
     </Form>
   );
