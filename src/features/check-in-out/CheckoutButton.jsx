@@ -7,7 +7,7 @@ function CheckoutButton({ bookingId }) {
     <Button
       disabled={checkOutStatus === "pending" || checkOutStatus === "success"}
       onClick={() => checkOutMutate(bookingId)}
-      variation="primary"
+      $variation="primary"
       size="small"
     >
       Check out
