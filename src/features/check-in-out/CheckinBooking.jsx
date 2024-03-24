@@ -47,6 +47,7 @@ function CheckinBooking() {
     numGuests,
     numNights,
     hasBreakfast,
+    status,
   } = booking;
 
   const optionalBreakfastPrice = breakfastPrice * numGuests * numNights;
@@ -121,16 +122,20 @@ function CheckinBooking() {
       </Box>
 
       <ButtonGroup>
-        <Button
-          disabled={
-            (addBreakfast === "unconfirmed"
-              ? !confirmPaid && !isPaid
-              : !confirmPaid) || checkInStatus === "pending"
-          }
-          onClick={handleCheckin}
-        >
-          Check in booking #{bookingId}
-        </Button>
+        {status === "unconfirmed" && (
+          <Button
+            disabled={
+              (addBreakfast === "unconfirmed"
+                ? !confirmPaid && !isPaid
+                : !confirmPaid) ||
+              checkInStatus === "pending" ||
+              status === "checked-in"
+            }
+            onClick={handleCheckin}
+          >
+            Check in booking #{bookingId}
+          </Button>
+        )}
         <Button
           disabled={checkInStatus === "pending"}
           $variation="secondary"
