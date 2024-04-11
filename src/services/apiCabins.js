@@ -10,8 +10,12 @@ export async function getCabins() {
 
 export async function deleteCabin(id) {
   const { error } = await supabase.from("cabins").delete().eq("id", id);
-  console.log(id);
+  console.log(error);
 
+  if (error?.code === "23503")
+    throw new Error(
+      "Cabin could not be deleted: This Cabin is associated with a booking."
+    );
   if (error) throw new Error("Cabin could not be deleted");
 }
 

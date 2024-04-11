@@ -1,3 +1,4 @@
+import { uploadCabinsAndBookings } from "../data/apiDemoDataUploader";
 import supabase, { supabaseUrl } from "./supabase";
 
 export async function signUp({ email, password, fullName }) {
@@ -15,6 +16,9 @@ export async function login({ email, password }) {
     email,
     password,
   });
+
+  // This Code is only for demo purpose of my project. When a user logs in, Fresh bookings & cabins are uploaded.
+  await uploadCabinsAndBookings();
 
   if (error) throw new Error(`Login failed: ${error.message}`);
   return data;

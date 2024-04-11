@@ -60,6 +60,7 @@ function CreateCabinForm({ onCloseModal }) {
           {...register("maxCapacity", {
             required: "This field is required",
             min: { value: 2, message: "Capacity should be at least 2" },
+            max: { value: 100, message: "Capacity should be at most 100" },
           })}
         />
         {errors.maxCapacity && <Error>{errors.maxCapacity.message}</Error>}
@@ -74,6 +75,10 @@ function CreateCabinForm({ onCloseModal }) {
           {...register("regularPrice", {
             required: "This field is required",
             min: { value: 100, message: "Regular price must be at least 100" },
+            max: {
+              value: 10000,
+              message: "Regular price must be at most 10000",
+            },
           })}
         />
         {errors.regularPrice && <Error>{errors.regularPrice.message}</Error>}

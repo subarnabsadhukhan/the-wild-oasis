@@ -11,6 +11,10 @@ function useLogin() {
     onSuccess: (data) => {
       queryClient.setQueryData(["user"], data.user);
       toast.success("Login Successful");
+
+      // This Code is only for demo purpose of my project
+      queryClient.refetchQueries({ queryKey: ["bookings"] });
+
       navigate("/dashboard", { replace: true });
     },
     onError: (error) => {
